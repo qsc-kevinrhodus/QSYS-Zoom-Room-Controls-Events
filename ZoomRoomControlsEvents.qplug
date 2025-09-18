@@ -6,7 +6,7 @@ PluginInfo =
     Author = "K. Rhodus // Q-SYS",
     Description = "Room Controls for Zoom Room Events Plugin",
     ShowDebug = false,
-    BuildVersion = "5"
+    BuildVersion = "6"
   };
 
 function GetColor(props)
@@ -169,7 +169,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="GroupBox",
         Position={0,0},
-        Size={265,604},
+        Size={525,604},
         Fill={255,255,255},
         CornerRadius=0,
         StrokeColor={0,0,0},
@@ -181,7 +181,7 @@ function GetControlLayout(props)
       Type="Label",
       Text= "Room Controls for Zoom Room \r Events",
       Position={0,0},
-      Size={265,40},
+      Size={525,40},
       Color={255,255,255},
       CornerRadius=0,
       FontSize=14,
@@ -197,8 +197,8 @@ function GetControlLayout(props)
     -- GroupBox
     table.insert(graphics,{
         Type="GroupBox",
-        Position={11,66},
-        Size={244,30},
+        Position={22,66},
+        Size={483,30},
         Fill={255,255,255,0},
         CornerRadius=8,
         StrokeColor={0,0,0},
@@ -209,7 +209,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="Label",
         Text="Interface:",
-        Position={11,66},
+        Position={22,66},
         Size={79,30},
         Color={0,0,0},
         CornerRadius=0,
@@ -224,9 +224,9 @@ function GetControlLayout(props)
           Style="ComboBox",
           CornerRadius = 8,
           Color={255,255,255,0},
-          Size={155,30},
+          Size={380,30},
           StrokeWidth = 1,
-          Position={100,66},
+          Position={125,66},
           FontSize=12,
           Font="Poppins",
           FontStyle = "Medium",
@@ -238,8 +238,8 @@ function GetControlLayout(props)
     -- GroupBox
     table.insert(graphics,{
         Type="GroupBox",
-        Position={11,96},
-        Size={244,30},
+        Position={22,96},
+        Size={483,30},
         Fill={255,255,255,0},
         CornerRadius=8,
         StrokeColor={0,0,0},
@@ -250,7 +250,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="Label",
         Text="Port:",
-        Position={11,96},
+        Position={22,96},
         Size={79,30},
         Color={0,0,0},
         CornerRadius=0,
@@ -265,9 +265,9 @@ function GetControlLayout(props)
           Style="Text",
           CornerRadius = 8,
           Color={255,255,255,0},
-          Size={155,30},
+          Size={380,30},
           StrokeWidth = 1,
-          Position={100,96},
+          Position={125,96},
           FontSize=12,
           Font="Poppins",
           FontStyle = "Medium",
@@ -280,8 +280,8 @@ function GetControlLayout(props)
     -- GroupBox
     table.insert(graphics,{
         Type="GroupBox",
-        Position={11,141},
-        Size={244,166},
+        Position={22,141},
+        Size={483,166},
         Fill={255,255,255,0},
         CornerRadius=8,
         StrokeColor={0,0,0},
@@ -292,7 +292,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="Label",
         Text="Config:",
-        Position={11,141},
+        Position={22,141},
         Size={79,30},
         Color={0,0,0},
         CornerRadius=0,
@@ -307,9 +307,9 @@ function GetControlLayout(props)
           Style="Text",
           CornerRadius = 8,
           Color={255,255,255,0},
-          Size={154,166},
+          Size={380,166},
           StrokeWidth = 1,
-          Position={100,141},
+          Position={125,141},
           FontSize=6,
           Font="Poppins",
           FontStyle = "Left",
@@ -323,7 +323,7 @@ function GetControlLayout(props)
           CornerRadius = 8,
           Size={77,29},
           StrokeWidth = 0,
-          Position={18,202},
+          Position={40,202},
           Margin = 0,
           Padding = 0,
           FontSize=10,
@@ -340,7 +340,7 @@ function GetControlLayout(props)
           CornerRadius = 8,
           Size={77,29},
           StrokeWidth = 1,
-          Position={18,239},
+          Position={40,239},
           Margin = 0,
           Padding = 0,
           FontSize=10,
@@ -355,8 +355,8 @@ function GetControlLayout(props)
     -- GroupBox
     table.insert(graphics,{
         Type="GroupBox",
-        Position={11,347},
-        Size={244,30},
+        Position={22,329},
+        Size={483,30},
         Fill={255,255,255,0},
         CornerRadius=8,
         StrokeColor={0,0,0},
@@ -367,7 +367,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="Label",
         Text="Status:",
-        Position={11,347},
+        Position={22,329},
         Size={79,30},
         Color={0,0,0},
         CornerRadius=0,
@@ -381,9 +381,9 @@ function GetControlLayout(props)
         layout["Status"]={
           Style="Text",
           CornerRadius = 8,
-          Size={155,30},
+          Size={380,30},
           StrokeWidth = 1,
-          Position={101,347},
+          Position={127,329},
           FontSize=9,
           Font="Poppins",
           FontStyle = "Medium",
@@ -396,8 +396,8 @@ function GetControlLayout(props)
     -- GroupBox
     table.insert(graphics,{
         Type="GroupBox",
-        Position={11,388},
-        Size={244,166},
+        Position={22,388},
+        Size={483,166},
         Fill={255,255,255,0},
         CornerRadius=8,
         StrokeColor={0,0,0},
@@ -408,7 +408,7 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="Label",
         Text="Message\rHistory:",
-        Position={11,388},
+        Position={22,388},
         Size={79,41},
         Color={0,0,0},
         CornerRadius=0,
@@ -422,9 +422,9 @@ function GetControlLayout(props)
         layout["History"]={
           Style="ListBox",
           CornerRadius = 8,
-          Size={154,166},
+          Size={380,166},
           StrokeWidth = 1,
-          Position={100,388},
+          Position={125,388},
 
           FontSize=12,
           Font="Poppins",
@@ -455,7 +455,7 @@ function GetControlLayout(props)
       CornerRadius = 8,
       Size={77,29},
       StrokeWidth = 0,
-      Position={11,565},
+      Position={22,565},
       Margin = 0,
       Padding = 0,
       FontSize=10,
@@ -469,8 +469,8 @@ function GetControlLayout(props)
       table.insert(graphics,{
         Type="Label",
         Text="Version: " .. PluginInfo.Version,
-        Position={175,565},
-        Size={79,29},
+        Position={346,565},
+        Size={156,29},
         Color={0,0,0},
         CornerRadius=0,
         FontSize=9,
