@@ -1,0 +1,715 @@
+PluginInfo =
+  {
+    Name = "Room Controls for Zoom Room Events",
+    Version = "1.0",
+    Id = "ad52fdb7-0b98-4955-b5b6-28d6a6c83fd0",
+    Author = "K. Rhodus // Q-SYS",
+    Description = "Room Controls for Zoom Room Events Plugin",
+    ShowDebug = false,
+    BuildVersion = "5"
+  };
+
+function GetColor(props)
+  return {11,92,255}
+end
+  
+function GetPrettyName(props)
+  return PluginInfo.Name
+end
+
+zrcEvents = {
+zr_zoom_meeting_started="Meeting~Meeting Started",
+zr_zoom_meeting_ended="Meeting~Meeting Ended",
+zr_interop_meeting_started="Meeting~Interop Meeting Started",
+zr_interop_meeting_ended="Meeting~Interop Meeting Ended",
+zr_meeting_ring_started="Meeting~Incoming Meeting Invite Start",
+zr_meeting_ring_ended="Meeting~Incoming Meeting Invite End",
+zr_meeting_item_about_to_start="Meeting~Next Meeting Alert Triggered",
+zr_meeting_item_start="Meeting~Meeting List Item Start",
+zr_meeting_item_stop="Meeting~Meeting List Item Stop",
+zr_phone_ring_started="Phone~Incoming Phone Call Start",
+zr_phone_ring_ended="Phone~Incoming Phone Call End",
+zr_phone_call_started="Phone~Phone Call Started",
+zr_phone_call_ended="Phone~Phone Call Ended",
+zr_video_started="In Meeting~Video On (Camera Mute Off)",
+zr_video_stopped="In Meeting~Video Off (Camera Mute On)",
+zr_video_device_changed="In Meeting~Selected Video Device Changed",
+zr_microphone_unmuted="In Meeting~Mic On (Mic Unmuted)",
+zr_microphone_muted="In Meeting~Mic Off (Mic Muted)",
+zr_audio_device_changed="In Meeting~Selected Audio Device Changed",
+zr_share_started="In Meeting~Wireless Sharing Started",
+zr_share_ended="In Meeting~Wireless Sharing Ended",
+zr_hdmi_share_started="In Meeting~HDMI Sharing Started",
+zr_hdmi_share_ended="In Meeting~HDMI Sharing Stopped",
+zr_recording_started="In Meeting~Recording Started",
+zr_recording_ended="In Meeting~Recording Stopped",
+zr_elevate_to_meeting="In Meeting~Meeting elevation",
+zr_user_paired="Pairing~User Paired to ZR",
+zr_user_unpaired="Pairing~User Unpaired from ZR",
+zr_digital_signage_started="Signage~Digital Signage Begins",
+zr_digital_signage_ended="Signage~Digital Signage is dismissed",
+zr_whiteboard_started="Whiteboard~Whiteboarding opened",
+zr_whiteboard_ended="Whiteboard~Whiteboarding closed",
+zr_companion_whiteboard_connected="Whiteboard~Companion Whiteboard is added to the Zoom Room",
+zr_companion_whiteboard_disconnected="Whiteboard~Companion Whiteboard is removed from the Zoom Room",
+zr_operation_time_started="Admin~Operation Time Begins",
+zr_operation_time_ended="Admin~Operation Time Ends",
+zr_people_detected="Admin~People Detected",
+zr_people_not_detected="Admin~No People Detected",
+zr_voice_command_on="Admin~Voice Commands are enabled",
+zr_voice_command_off="Admin~Voice Commands are disabled",
+zr_zoom_app_opened="Admin~Zoom App is opened",
+zr_zoom_app_closed="Admin~Zoom App is closed",
+zr_room_controls_opened="Admin~Room Controls is Opened",
+zr_room_controls_closed="Admin~Room Controls is Closed",
+zr_room_startup_completed="Admin~Zoom Rooms Startup Completed",
+}
+
+
+function GetProperties()
+  props = {}
+
+  table.insert(props, {
+    Name = "Debug Print",
+    Type = "enum",
+    Choices = {"None", "Tx", "Function Calls", "All"},
+    Value = "None"
+  })
+
+  return props
+end
+
+function RectifyProperties(props)
+  return props
+end
+
+function GetControls(props)
+  local ctrl = {};
+
+    for idx,ctl in pairs(zrcEvents) do
+        table.insert(ctrl,{
+            Name = idx,
+            ControlType = "Button",
+            ButtonType = "Trigger",
+            UserPin = true,
+            PinStyle = "Output"
+        })
+    end
+
+    table.insert(ctrl,{
+        Name = "Interface",
+        ControlType = "Text",
+        UserPin = true,
+        PinStyle = "Both"
+    })
+
+    table.insert(ctrl,{
+        Name = "Port",
+        ControlType = "Text",
+        UserPin = true,
+        PinStyle = "Both"
+    })
+
+    table.insert(ctrl,{
+        Name = "Config",
+        ControlType = "Indicator",
+        IndicatorType = "Text",
+        UserPin = true,
+        PinStyle = "Output"
+    })
+
+    table.insert(ctrl,{
+        Name = "Status",
+        ControlType = "Indicator",
+        IndicatorType = "Status",
+        UserPin = true,
+        PinStyle = "Output"
+    })
+
+    table.insert(ctrl,{
+        Name = "History",
+        ControlType = "Text",
+        UserPin = true,
+        PinStyle = "Output"
+    })
+
+    table.insert(ctrl,{
+        Name = "BuildConfig",
+        ControlType = "Button",
+        ButtonType = "Trigger",
+        UserPin = true,
+        PinStyle = "Input"
+    })
+
+    table.insert(ctrl,{
+        Name = "ExportConfig",
+        ControlType = "Button",
+        ButtonType = "Trigger",
+        UserPin = true,
+        PinStyle = "Input"
+    })
+
+    table.insert(ctrl,{
+        Name = "ResetTCP",
+        ControlType = "Button",
+        ButtonType = "Trigger",
+        UserPin = true,
+        PinStyle = "Input"
+    })
+
+  return ctrl;
+end
+
+function GetControlLayout(props)
+  layout = {};
+  graphics = {};
+
+  --Constants 
+    --Background
+      table.insert(graphics,{
+        Type="GroupBox",
+        Position={0,0},
+        Size={265,604},
+        Fill={255,255,255},
+        CornerRadius=0,
+        StrokeColor={0,0,0},
+        StrokeWidth=0,
+      })
+
+    --Header
+    table.insert(graphics,{
+      Type="Label",
+      Text= "Room Controls for Zoom Room \r Events",
+      Position={0,0},
+      Size={265,40},
+      Color={255,255,255},
+      CornerRadius=0,
+      FontSize=14,
+      Font="Poppins",
+      FontStyle = "Bold",
+      Fill={0,118,191},
+      HTextAlign="Center",
+    })
+
+    ----------------
+    -- Interface   --
+    ----------------
+    -- GroupBox
+    table.insert(graphics,{
+        Type="GroupBox",
+        Position={11,66},
+        Size={244,30},
+        Fill={255,255,255,0},
+        CornerRadius=8,
+        StrokeColor={0,0,0},
+        StrokeWidth=1,
+      })
+
+    --Label
+      table.insert(graphics,{
+        Type="Label",
+        Text="Interface:",
+        Position={11,66},
+        Size={79,30},
+        Color={0,0,0},
+        CornerRadius=0,
+        FontSize=12,
+        Font="Poppins",
+        FontStyle = "Medium",
+        HTextAlign="Right",
+      })
+
+    --Control
+        layout["Interface"]={
+          Style="ComboBox",
+          CornerRadius = 8,
+          Color={255,255,255,0},
+          Size={155,30},
+          StrokeWidth = 1,
+          Position={100,66},
+          FontSize=12,
+          Font="Poppins",
+          FontStyle = "Medium",
+          HTextAlign="Center",
+        }
+    ----------------
+    -- Port   --
+    ----------------
+    -- GroupBox
+    table.insert(graphics,{
+        Type="GroupBox",
+        Position={11,96},
+        Size={244,30},
+        Fill={255,255,255,0},
+        CornerRadius=8,
+        StrokeColor={0,0,0},
+        StrokeWidth=1,
+      })
+
+    --Label
+      table.insert(graphics,{
+        Type="Label",
+        Text="Port:",
+        Position={11,96},
+        Size={79,30},
+        Color={0,0,0},
+        CornerRadius=0,
+        FontSize=12,
+        Font="Poppins",
+        FontStyle = "Medium",
+        HTextAlign="Right",
+      })
+
+    --Control
+        layout["Port"]={
+          Style="Text",
+          CornerRadius = 8,
+          Color={255,255,255,0},
+          Size={155,30},
+          StrokeWidth = 1,
+          Position={100,96},
+          FontSize=12,
+          Font="Poppins",
+          FontStyle = "Medium",
+          HTextAlign="Center",
+        }
+
+    ----------------
+    -- Config   --
+    ----------------
+    -- GroupBox
+    table.insert(graphics,{
+        Type="GroupBox",
+        Position={11,141},
+        Size={244,166},
+        Fill={255,255,255,0},
+        CornerRadius=8,
+        StrokeColor={0,0,0},
+        StrokeWidth=1,
+      })
+
+    --Label
+      table.insert(graphics,{
+        Type="Label",
+        Text="Config:",
+        Position={11,141},
+        Size={79,30},
+        Color={0,0,0},
+        CornerRadius=0,
+        FontSize=12,
+        Font="Poppins",
+        FontStyle = "Medium",
+        HTextAlign="Right",
+      })
+
+    --Control
+        layout["Config"]={
+          Style="Text",
+          CornerRadius = 8,
+          Color={255,255,255,0},
+          Size={154,166},
+          StrokeWidth = 1,
+          Position={100,141},
+          FontSize=6,
+          Font="Poppins",
+          FontStyle = "Left",
+          HTextAlign="Top",
+        }
+
+        layout["BuildConfig"]={
+          Style="Button",
+          ButtonStyle = "Trigger",
+          ButtonVisualStyle = "Flat",
+          CornerRadius = 8,
+          Size={77,29},
+          StrokeWidth = 0,
+          Position={18,202},
+          Margin = 0,
+          Padding = 0,
+          FontSize=10,
+          Font="Poppins",
+          FontStyle = "Medium",
+          HTextAlign="Center",
+          Legend = "Build\rConfig"
+        }
+
+        layout["ExportConfig"]={
+          Style="Button",
+          ButtonStyle = "Trigger",
+          ButtonVisualStyle = "Flat",
+          CornerRadius = 8,
+          Size={77,29},
+          StrokeWidth = 1,
+          Position={18,239},
+          Margin = 0,
+          Padding = 0,
+          FontSize=10,
+          Font="Poppins",
+          FontStyle = "Medium",
+          HTextAlign="Center",
+          Legend = "Save to\rCore"
+        }
+    ----------------
+    -- Status   --
+    ----------------
+    -- GroupBox
+    table.insert(graphics,{
+        Type="GroupBox",
+        Position={11,347},
+        Size={244,30},
+        Fill={255,255,255,0},
+        CornerRadius=8,
+        StrokeColor={0,0,0},
+        StrokeWidth=1,
+      })
+
+    --Label
+      table.insert(graphics,{
+        Type="Label",
+        Text="Status:",
+        Position={11,347},
+        Size={79,30},
+        Color={0,0,0},
+        CornerRadius=0,
+        FontSize=12,
+        Font="Poppins",
+        FontStyle = "Medium",
+        HTextAlign="Right",
+      })
+
+    --Control
+        layout["Status"]={
+          Style="Text",
+          CornerRadius = 8,
+          Size={155,30},
+          StrokeWidth = 1,
+          Position={101,347},
+          FontSize=9,
+          Font="Poppins",
+          FontStyle = "Medium",
+          HTextAlign="Center",
+        }
+
+    ----------------
+    -- History   --
+    ----------------
+    -- GroupBox
+    table.insert(graphics,{
+        Type="GroupBox",
+        Position={11,388},
+        Size={244,166},
+        Fill={255,255,255,0},
+        CornerRadius=8,
+        StrokeColor={0,0,0},
+        StrokeWidth=1,
+      })
+
+    --Label
+      table.insert(graphics,{
+        Type="Label",
+        Text="Message\rHistory:",
+        Position={11,388},
+        Size={79,41},
+        Color={0,0,0},
+        CornerRadius=0,
+        FontSize=12,
+        Font="Poppins",
+        FontStyle = "Medium",
+        HTextAlign="Right",
+      })
+
+    --Control
+        layout["History"]={
+          Style="ListBox",
+          CornerRadius = 8,
+          Size={154,166},
+          StrokeWidth = 1,
+          Position={100,388},
+
+          FontSize=12,
+          Font="Poppins",
+          FontStyle = "Medium",
+          HTextAlign="Center",
+          Fill = {0,0,0,0}
+        }
+
+    ----------------
+    -- Pins       --
+    ----------------   
+    for idx,ctl in pairs(zrcEvents) do
+        layout[idx] = {
+            Style = "None",
+            PrettyName = ctl
+        }
+    end
+
+
+    -----------------
+    -- Reset TCP   --
+    -----------------
+
+    layout["ResetTCP"]={
+      Style="Button",
+      ButtonStyle = "Trigger",
+      ButtonVisualStyle = "Flat",
+      CornerRadius = 8,
+      Size={77,29},
+      StrokeWidth = 0,
+      Position={11,565},
+      Margin = 0,
+      Padding = 0,
+      FontSize=10,
+      Font="Poppins",
+      FontStyle = "Medium",
+      HTextAlign="Center",
+      Legend = "Reset Socket"
+        }
+
+    --Label
+      table.insert(graphics,{
+        Type="Label",
+        Text="Version: " .. PluginInfo.Version,
+        Position={175,565},
+        Size={79,29},
+        Color={0,0,0},
+        CornerRadius=0,
+        FontSize=9,
+        Font="Poppins",
+        FontStyle = "Medium",
+        HTextAlign="Right",
+      })
+      
+  return layout,graphics;
+end
+
+if Controls then
+  print(PluginInfo["Name"])
+  print("-GUID: " .. PluginInfo["Id"])
+  print("-BuildVersion: " .. PluginInfo["BuildVersion"])
+  print("-Version: " .. PluginInfo["Version"])
+  print("-Author: " .. PluginInfo["Author"])  
+  print("------   STARTING QPLUG   -----")
+
+    --[[
+    Zoom Room Controls Status Plugin
+    Created by K. Rhodus // Q-SYS
+    kevin.rhodus@qsc.com
+
+    Version History:
+    1.0 - Initial Build
+
+    ]]--
+
+    json = require("rapidjson")
+    --------------------------------------------------------------------------------------------------------------------------------------
+    -- NETWORK INFO
+    --------------------------------------------------------------------------------------------------------------------------------------
+
+
+    function getInterfaces()
+    --if DebugFunction then print("getInterfaces() called") end
+    local temp = Network.Interfaces()
+    interfaces = {}
+    for _,ctl in ipairs(temp) do
+        interfaces[ctl.Interface] = ctl.Address
+        table.insert(interfaces, ctl.Interface)
+    end
+    Controls.Interface.Choices = interfaces
+    end
+
+    getInterfaces()
+
+    Controls.Interface.EventHandler = function(ctl)
+    if interfaces[ctl.String] ~= nil then 
+        IPAddress = interfaces[ctl.String]
+    else
+        Controls.Config.String = "Please Select a Valid NIC"
+    end
+    end
+
+    if Controls.Interface.String ~= "" then 
+    if interfaces[Controls.Interface.String] ~= nil then 
+        IPAddress = interfaces[Controls.Interface.String]
+    else 
+        Controls.Config.String = "Please Select a Valid NIC"
+    end
+    end
+
+    function GetCoreHostname()
+    for _,v in pairs(Design.GetInventory()) do
+        if v.Type == "Processor" then
+        Hostname = v.Name
+        end
+        break
+    end
+    return Hostname
+    end
+
+
+    qds = Design.GetStatus()
+
+    --------------------------------------------------------------------------------------------------------------------------------------
+    -- BUILD CONFIG
+    --------------------------------------------------------------------------------------------------------------------------------------
+    Controls.Config.String = ""
+
+    function buildConfig()
+    --Build Config
+    zrcConfig = {}
+    --About Header
+    zrcConfig["about"] = {app= "Q-SYS Room Controls Events Plugin v0.1",core= GetCoreHostname(), design = qds.DesignName}
+    --Adapter
+    zrcConfig["adapters"] = {{model = "GenericNetworkAdapter", ip = "tcp://"..IPAddress..":"..Controls.Port.String, ports = {{id = "QSYS", name= "Q-SYS", methods = {}}}}}
+
+    for i,v in pairs(zrcEvents) do 
+        local temp = {id = i, name = i, command = i.."\r", type= "action"}
+        table.insert(zrcConfig["adapters"][1]["ports"][1]["methods"], temp)
+    end
+    --Styles
+    zrcConfig["styles"]={"zr_event_only=true"}
+    --Rules
+    zrcConfig["rules"]= {}
+
+    for i,v in pairs(zrcEvents) do
+        zrcConfig["rules"][i] = {"QSYS."..i}
+    end
+
+    --Compile
+    Controls.Config.String = json.encode(zrcConfig, {pretty=true})
+    end 
+
+    Controls.BuildConfig.EventHandler = function()
+    if Controls.Port.String ~= "" and IPAddress ~= nil then
+        buildConfig()
+    else
+        Controls.Config.String = "Please Assign Interface and Port"
+    end
+    end
+
+    Controls.ExportConfig.EventHandler = function()
+    if Controls.Config.String ~= "" then
+        local myfile = io.open ("media/RoomControlsConfig.json","w")
+        if myfile~=nil then
+        myfile:write(Controls.Config.String)
+        print("Line Written to File")
+        myfile:close()
+        else
+        print("myfile==nil")
+        end
+    end
+    end
+
+
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    --       TCP Server      --
+    ----------------------------------------------------------------------------------------------------------------------------------------
+
+    Controls.Status.Value = 5
+
+    --Setup TCPSocketServer
+
+    ZRC=TcpSocketServer:New()
+    sockets = {}
+
+    --Open Server
+    if Controls.Port.String ~= "" then 
+        ZRC:Listen(Controls.Port.String)
+        Controls.Status.Value = 5
+        Controls.Status.String = "Waiting for Connection"
+    else
+        Controls.Status.Value = 2
+        Controls.Status.String = "No Port Selected"
+    end
+
+    Controls.Port.EventHandler = function(ctl)
+        if ctl.String ~= "" then 
+            ZRC:Listen(Controls.Port.String)
+            Controls.Status.Value = 5
+            Controls.Status.String = "Waiting for Connection"
+        end
+    end
+
+    --Device Connected
+    ZRC.EventHandler = function(SocketInstance)
+      print("Got Connect", SocketInstance)
+      Controls.Status.Value = 0
+      table.insert(sockets, SocketInstance)
+      SocketInstance.EventHandler = SocketHandler
+    end
+
+
+    --Manage Sockets Table
+    function RemoveSocketFromTable(sock)
+      for k,v in pairs(sockets) do
+          if v == sock then 
+          table.remove(sockets, k) 
+          return
+          end
+      end
+    end
+
+    --Reset Socket
+    Controls.ResetTCP.EventHandler = function()
+      Controls.Status.Value = 5
+      Controls.Status.String = "Resetting Socket"
+      for k,v in pairs(sockets) do
+        table.remove(sockets, k) 
+      end
+      collectgarbage()
+      ZRC:Close()
+      if Controls.Port.String ~= "" then 
+        ZRC:Listen(Controls.Port.String)
+        Controls.Status.Value = 5
+        Controls.Status.String = "Waiting for Connection"
+      else
+        Controls.Status.Value = 2
+        Controls.Status.String = "No Port Selected"
+      end
+    end
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    --      Socket EventHandler     --
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    SocketHandler=function(sock, event)
+    if event == TcpSocket.Events.Closed then
+        print("Disconnect")
+        Controls.Status.Value = 3
+        RemoveSocketFromTable(sock)
+    elseif event == TcpSocket.Events.Error then
+        print("Error")
+        Controls.Status.Value = 2
+        RemoveSocketFromTable(sock)
+    elseif event == TcpSocket.Events.Timeout then
+        Controls.Status.Value = 3
+        RemoveSocketFromTable(sock)
+    elseif event == TcpSocket.Events.Data then
+        local data = sock:ReadLine(TcpSocket.EOL.Any)
+        while (data ~= nil) do
+        print( "reading until CrLf got "..data )
+        ParseResposne(data)  
+        data = sock:ReadLine(TcpSocket.EOL.Any)
+        end  
+    end
+    end
+
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    --      Socket EventHandler     --
+    -----------------------------------------------------------------------------------------------------------------------------------------
+    msgHistory = {}
+
+    function ParseResposne(data)
+    if zrcEvents[data] ~= nil then
+        Controls[data]:Trigger()
+        table.insert(msgHistory, 1, zrcEvents[data]) 
+    else
+        table.insert(msgHistory, 1, "Error: "..data) 
+    end
+
+    while #msgHistory > 10 do
+        for i = #msgHistory, 10, -1 do
+        table.remove(msgHistory, i)
+        end
+    end
+    Controls.History.Choices = msgHistory
+    print(json.encode(msgHistory, {pretty=true}))
+    end
+end
