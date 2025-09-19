@@ -6,7 +6,7 @@ PluginInfo =
     Author = "K. Rhodus // Q-SYS",
     Description = "Room Controls for Zoom Room Events Plugin",
     ShowDebug = false,
-    BuildVersion = "6"
+    BuildVersion = "8"
   };
 
 function GetColor(props)
@@ -68,13 +68,6 @@ zr_room_startup_completed="Admin~Zoom Rooms Startup Completed",
 
 function GetProperties()
   props = {}
-
-  table.insert(props, {
-    Name = "Debug Print",
-    Type = "enum",
-    Choices = {"None", "Tx", "Function Calls", "All"},
-    Value = "None"
-  })
 
   return props
 end
@@ -312,8 +305,8 @@ function GetControlLayout(props)
           Position={125,141},
           FontSize=6,
           Font="Poppins",
-          FontStyle = "Left",
-          HTextAlign="Top",
+          FontStyle = "Medium",
+          HTextAlign="Left",
         }
 
         layout["BuildConfig"]={
@@ -507,7 +500,6 @@ if Controls then
 
 
     function getInterfaces()
-    --if DebugFunction then print("getInterfaces() called") end
     local temp = Network.Interfaces()
     interfaces = {}
     for _,ctl in ipairs(temp) do
@@ -710,6 +702,6 @@ if Controls then
         end
     end
     Controls.History.Choices = msgHistory
-    print(json.encode(msgHistory, {pretty=true}))
+    Controls.History.String = msgHistory[1]
     end
 end
